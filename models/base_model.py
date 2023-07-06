@@ -4,9 +4,11 @@
 
 import uuid
 from datetime import datetime
+import models
 
 
 class BaseModel:
+    
     def __init__(self, *args, **kwargs):
         """ Construct """
         if not kwargs:
@@ -40,6 +42,7 @@ class BaseModel:
     def save(self):
         "document"
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """document"""
