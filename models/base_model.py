@@ -30,6 +30,7 @@ class BaseModel:
                 if 'updated_at' not in kwargs.keys():
                     self.updated_at = datetime.now()
                 setattr(self, key, value)
+        models.storage.new(self)
 
     def update(self):
         "document"
@@ -45,9 +46,12 @@ class BaseModel:
         models.storage.save()
 
     def to_dict(self):
-        """document"""
-        obj_dict = self.__dict__.copy()
-        obj_dict['__class__'] = self.__class__.__name__
-        obj_dict['created_at'] = self.created_at.isoformat()
-        obj_dict['updated_at'] = self.updated_at.isoformat()
-        return obj_dict
+        """ Return a dictionary representation of the object """
+        if isinstance(self, BaseModel):
+            obj_dict = self.__dict__.copy()
+            obj_dict['__class__'] = self.__class__.__name__
+            obj_dict['created_at'] = self.created_at.isoformat()
+            obj_dict['updated_at'] = self.updated_at.isoformat()
+            return obj_dict
+        else:
+            return self.copy()
