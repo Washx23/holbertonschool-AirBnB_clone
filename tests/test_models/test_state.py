@@ -1,6 +1,9 @@
 """ Test for state class """
+
+
 from models.state import State
 import unittest
+
 
 class Test_state(unittest.TestCase):
 
@@ -10,6 +13,7 @@ class Test_state(unittest.TestCase):
         self.assertIsInstance(State_test, State)
         self.assertTrue(hasattr(State_test, "name"))
         self.assertEqual(State_test.name, "")
+
 
 if __name__ == '__main__':
     unittest.main()

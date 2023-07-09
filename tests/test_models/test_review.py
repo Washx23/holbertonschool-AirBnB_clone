@@ -1,6 +1,9 @@
 """ Test for review class """
+
+
 from models.review import Review
 import unittest
+
 
 class Test_review(unittest.TestCase):
 
@@ -14,6 +17,7 @@ class Test_review(unittest.TestCase):
         self.assertEqual(Review_test.place_id, "")
         self.assertEqual(Review_test.user_id, "")
         self.assertEqual(Review_test.text, "")
+
 
 if __name__ == '__main__':
     unittest.main()

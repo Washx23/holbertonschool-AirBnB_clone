@@ -1,6 +1,9 @@
 """ Test for place class """
+
+
 from models.place import Place
 import unittest
+
 
 class Test_place(unittest.TestCase):
 
@@ -29,6 +32,7 @@ class Test_place(unittest.TestCase):
         self.assertEqual(Place_test.price_by_night, 0)
         self.assertEqual(Place_test.latitude, 0.0)
         self.assertEqual(Place_test.longitude, 0.0)
+
 
 if __name__ == '__main__':
     unittest.main()

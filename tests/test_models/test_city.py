@@ -1,6 +1,9 @@
 """ Test for city class """
+
+
 from models.city import City
 import unittest
+
 
 class Test_city(unittest.TestCase):
 
@@ -12,6 +15,7 @@ class Test_city(unittest.TestCase):
         self.assertTrue(hasattr(City_test, "name"))
         self.assertEqual(City_test.state_id, "")
         self.assertEqual(City_test.name, "")
+
 
 if __name__ == '__main__':
     unittest.main()
