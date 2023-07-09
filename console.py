@@ -1,123 +1,117 @@
 #!/usr/bin/python3
-""" console """
-
-
+"""Import modules cmd and BaseModel class"""
 import cmd
 from models.base_model import BaseModel
-from models import storage
 from models.user import User
 from models.state import State
 from models.city import City
-from models.place import Place
-from models.review import Review
+from models import storage
 from models.amenity import Amenity
+from models.review import Review
+from models.place import Place
+"""Console for AirBnB clone"""
 
 
 class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
-    classes = {'BaseModel': BaseModel, 'User': User,
-            'State': State, 'City': City,
-            'Place': Place, 'Review': Review,
-            'Amenity': Amenity}
+    classes = {
+        "BaseModel": BaseModel,
+        "User": User,
+        "City": City,
+        "State": State,
+        "Amenity": Amenity,
+        "Place": Place,
+        "Review": Review
+    }
 
     def do_quit(self, arg):
-        """Quit command to exit the program"""
-        exit()
+        """Quits the program"""
+        return True
 
     def do_EOF(self, arg):
-        """EOF command to exit the program"""
-        print('')
-        exit()
+        """Quits the program"""
+        return True
 
-    def emptyline(self):
-        pass
+    def do_help(self, arg):
+        """Displays description of a command"""
+        super().do_help(arg)
 
     def do_create(self, arg):
-        """create command to exit the program"""
+        """Creates a new instance of a class"""
         if not arg:
             print("** class name missing **")
-        var = None
-        if arg:
-            separate_arg = arg.split()
-            if len(separate_arg) == 1:
-                if arg in self.classes.keys():
-                    var = self.classes[arg]()
-                    var.save()
-                    print(var.id)
-                else:
-                    print("** class doesn't exist **")
+        elif arg not in self.classes:
+            print("** class doesn't exist **")
+        else:
+            obj = self.classes[arg]()
+            storage.new(obj)
+            storage.save()
+            print(obj.id)
 
     def do_show(self, arg):
-        """show command to exit the program"""
-        if not arg:
+        """Shows the object with the given id"""
+        args = arg.split()
+        if len(args) < 2:
             print("** class name missing **")
-            return
-        elif arg.split()[0] not in self.classes:
+        elif args[0] not in self.classes:
             print("** class doesn't exist **")
-            return
-        elif len(arg.split()) > 1:
-            var = arg.split()[0] + '.' + arg.split()[1]
-            if var in storage.all():
-                value = storage.all()
-                print(value[var])
+        elif len(args) < 2:
+            print("** instance id missing **")
+        else:
+            obj_key = "{}.{}".format(args[0], args[1])
+            if obj_key in storage.all():
+                print(storage.all()[obj_key])
             else:
                 print("** no instance found **")
-        else:
-            print("** instance id missing **")
 
     def do_destroy(self, arg):
-        """destroy command to exit the program"""
-        if not arg:
+        """Deletes an object with the given id"""
+        args = arg.split()
+        if len(args) < 2:
             print("** class name missing **")
-            return
-        separate_arg = arg.split()
-        try:
-            var = eval(separate_arg[0])
-        except Exception:
+        elif args[0] not in self.classes:
             print("** class doesn't exist **")
-            return
-        if len(separate_arg) == 1:
+        elif len(args) < 2:
             print("** instance id missing **")
-            return
-        elif len(separate_arg) > 1:
-            var = separate_arg[0] + '.' + separate_arg[1]
-            if var in storage.all():
-                storage.all().pop(var)
+        else:
+            obj_key = "{}.{}".format(args[0], args[1])
+            if obj_key in storage.all():
+                del storage.all()[obj_key]
                 storage.save()
             else:
                 print("** no instance found **")
-                return
 
     def do_all(self, arg):
-        if not arg:
-            print([str(var) for var in storage.all().values()])
-        elif arg not in self.clas:
+        """Prints all instances of a class"""
+        obj_list = []
+        if arg and arg not in self.classes:
             print("** class doesn't exist **")
         else:
-            print([str(i) for j, i in storage.all().items() if arg in j])
+            for obj in storage.all().values():
+                if not arg or type(obj).__name__ == arg:
+                    obj_list.append(str(obj))
+            print(obj_list)
 
     def do_update(self, arg):
-        arg = arg.split()
-        if len(arg) == 0:
+        """Updates an object with new attributes"""
+        args = arg.split()
+        if len(args) < 2:
             print("** class name missing **")
-            return
-        elif arg[0] not in self.clas:
+        elif args[0] not in self.classes:
             print("** class doesn't exist **")
-            return
-        elif len(arg) == 1:
+        elif len(args) < 2:
             print("** instance id missing **")
-            return
+        elif len(args) < 3:
+            print("** attribute name missing **")
+        elif len(args) < 4:
+            print("** value missing **")
         else:
-            var = arg[0] + '.' + arg[1]
-            if var in storage.all():
-                if len(arg) > 2:
-                    if len(arg) == 3:
-                        print("** value missing **")
-                    else:
-                        setattr(storage.all()[var], arg[2], arg[3][1:-1])
-                        storage.all()[var].save()
-                else:
-                    print("** attribute name missing **")
+            obj_key = "{}.{}".format(args[0], args[1])
+            all_obj = storage.all()
+            if obj_key in all_obj:
+                obj = all_obj[obj_key]
+                setattr(obj, args[2], args[3])
+                storage.save()
             else:
                 print("** no instance found **")
 
