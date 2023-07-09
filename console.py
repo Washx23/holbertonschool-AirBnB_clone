@@ -23,13 +23,16 @@ class HBNBCommand(cmd.Cmd):
         "Place": Place,
         "Review": Review
     }
+    
+    def emptyline(self):
+        pass
 
     def do_quit(self, arg):
-        """Quits the program"""
+        """Quit command to exit the program"""
         return True
 
     def do_EOF(self, arg):
-        """Quits the program"""
+        """EOF command to exit the program"""
         return True
 
     def do_help(self, arg):
@@ -37,7 +40,7 @@ class HBNBCommand(cmd.Cmd):
         super().do_help(arg)
 
     def do_create(self, arg):
-        """Creates a new instance of a class"""
+        """create command to exit the program"""
         if not arg:
             print("** class name missing **")
         elif arg not in self.classes:
@@ -49,7 +52,7 @@ class HBNBCommand(cmd.Cmd):
             print(obj.id)
 
     def do_show(self, arg):
-        """Shows the object with the given id"""
+        """show command to exit the program"""
         args = arg.split()
         if len(args) < 2:
             print("** class name missing **")
@@ -65,7 +68,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
 
     def do_destroy(self, arg):
-        """Deletes an object with the given id"""
+        """destroy command to exit the program"""
         args = arg.split()
         if len(args) < 2:
             print("** class name missing **")
