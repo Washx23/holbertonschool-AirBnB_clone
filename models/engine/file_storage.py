@@ -38,6 +38,10 @@ class FileStorage:
                 objects_json[key] = value.to_dict()
             json.dump(objects_json, f)
 
+    def path(self):
+        """Devuelve la ruta del archivo JSON."""
+        return self.__file_path
+
     def reload(self):
         """comments"""
 
