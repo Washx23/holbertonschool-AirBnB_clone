@@ -1,39 +1,52 @@
 #!/usr/bin/python3
-"""document File storage"""
+"""comments"""
+
 
 import json
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage:
+    """comments"""
     __file_path = "file.json"
     __objects = {}
-    
+
     def all(self):
+        """comments"""
+
         return self.__objects
 
     def new(self, obj):
-        key = "{}.{}".format(type(obj).__name__, obj.id)
-        self.__objects[key] = obj
+        """comments"""
+
+        if obj is not None:
+            key = '{}.{}'.format(obj.__class__.__name__, obj.id)
+            self.__objects[key] = obj
 
     def save(self):
-        serialized_objects = {}
-        for key, obj in self.__objects.items():
-            serialized_objects[key] = obj.to_dict()
+        """comments"""
 
-        with open(self.__file_path, 'w') as file:
-            json.dump(serialized_objects, file)
-            
+        with open(self.__file_path, 'w') as f:
+            objects_json = {}
+            for key, value in self.__objects.items():
+                objects_json[key] = value.to_dict()
+            json.dump(objects_json, f)
+
     def reload(self):
+        """comments"""
+
         try:
-            with open(self.__file_path, 'r') as file:
-                serialized_objects = json.load(file)
-                for key, obj_dict in serialized_objects.items():
-                    class_name, obj_id = key.split('.')
-                    obj = BaseModel(**obj_dict)
-                    self.__objects[key] = obj
+            with open(FileStorage.__file_path, 'r', encoding='utf-8') as f:
+                objects_json = json.load(f)
+                for key, value in objects_json.items():
+                    obj_class = value['__class__']
+                    obj = eval(obj_class + "(**value)")
+                    FileStorage.__objects[key] = obj
         except FileNotFoundError:
             pass
-
-        
-
